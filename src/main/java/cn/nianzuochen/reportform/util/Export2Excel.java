@@ -83,14 +83,20 @@ public class Export2Excel {
         }
     }
 
+    /**
+     * 仅传递 sheet 和 实体类信息，根据实体类的 get 方法
+     * @param sheet
+     * @param infos
+     * @param <T>
+     * @return
+     */
     public <T> ResponseEntity<byte[]> addInfo(HSSFSheet sheet, List<T> infos) {
         return  addInfo(sheet, null, infos);
     }
     /**
-     * ToDo 根据 headToColumn 向 sheet 中添加数据
-     * 将数据信息插入到表格中
+     * 将数据信息插入到表格中，根据传递的实体类的 get 方法
      * @param sheet
-     * @param headToColumn
+     * @param headToColumn key 表示表头显示的信息，value 则是对应插入进去的属性值名称，并据此调用 get 方法获取属性值
      * @param infos
      * @return
      */
@@ -216,9 +222,10 @@ public class Export2Excel {
     }
 
     /**
+     * ToDo 增加一些验证
      * Key 表示表头名称，value 则是实际的数据，相当于给出了每一列的数据
      * @param sheet
-     * @param stuinfos
+     * @param stuinfos 需要保证每个 List 中信息条数相同
      * @return
      */
     public <T> ResponseEntity<byte[]> addInfo(HSSFSheet sheet, Map<String, List<T>> infos) {
