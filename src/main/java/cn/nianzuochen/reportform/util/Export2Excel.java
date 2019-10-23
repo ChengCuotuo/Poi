@@ -62,7 +62,7 @@ public class Export2Excel {
      * ToDo 添加表头的样式
      * 设置表头
      * @param sheet 目标 sheet
-     * @param headName 表头名称
+     * @param head 表头名称
      * @return
      */
     public void setHead(HSSFSheet sheet, LinkedHashSet<String> head) {
@@ -225,7 +225,7 @@ public class Export2Excel {
      * ToDo 增加一些验证
      * Key 表示表头名称，value 则是实际的数据，相当于给出了每一列的数据
      * @param sheet
-     * @param stuinfos 需要保证每个 List 中信息条数相同
+     * @param infos 需要保证每个 List 中信息条数相同
      * @return
      */
     public <T> ResponseEntity<byte[]> addInfo(HSSFSheet sheet, Map<String, List<T>> infos) {
