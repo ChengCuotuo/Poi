@@ -22,18 +22,16 @@ import java.util.*;
 public class ExtractExcel2Object <T> {
     // 参考对象
     private Class<T> basic;
-    private Set<String> attrMethods;
+    private Set<String> attrMethods = new HashSet<>();;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     public ExtractExcel2Object(Class<T> basic) {
         this.basic = basic;
-        attrMethods = new HashSet<>();
         initGetMethods();
     }
 
     /**
      * 提取提供的类的所有 get 方法对应的属性
-     * @param t
      */
     private void initGetMethods ()  {
         try {
@@ -45,7 +43,7 @@ public class ExtractExcel2Object <T> {
                 // 获取方法名称
                 String methodName = m.getName();
                 // 提取 get 方法
-                if (methodName.indexOf("set") >= 0) {
+                if (methodName.indexOf("get") >= 0) {
                     attrMethods.add(methodName.substring(3));
                 }
             }
@@ -102,8 +100,8 @@ public class ExtractExcel2Object <T> {
             // 存储 excel 标题名称
             List<String> headNames = new ArrayList<>();
             HSSFWorkbook workbook = new HSSFWorkbook(new POIFSFileSystem(file.getInputStream()));
-            // sheet 大于 1
-            int sheetNum = workbook.getNumberOfSheets();
+            // ToDo 待处理sheet 大于 1
+            // int sheetNum = workbook.getNumberOfSheets();
             HSSFSheet sheet = workbook.getSheetAt(0);
             // 获取第一行即标题行
             HSSFRow row = sheet.getRow(0);
@@ -138,15 +136,15 @@ public class ExtractExcel2Object <T> {
             int lastNum = keys.size();
             int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
             for (int i = 1; i < physicalNumberOfRows; i++) {
-                // 创建实体对象
-//                Class<T> entityClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-//                T entity = entityClass.newInstance();
                 // 获取数据行的数据
                 row = sheet.getRow(i);
+                // 创建实体对象
                 T entity = basic.newInstance();
                 Class clazz = entity.getClass();
 
                 HSSFRow hssfRow = sheet.getRow(i);
+                // 创建的文件会在已有信息最后出现很多整行空白的内容，用record 记录当前行空白的列数
+                // 当整行的内容都为空白表示文件结束
                 int record = 0;
                 int lastCellNum = hssfRow.getLastCellNum();
                 Set<Integer> effectiveIndexs = column2Method.keySet();
@@ -160,7 +158,7 @@ public class ExtractExcel2Object <T> {
                     String cellValue = cell.getStringCellValue();
                     // 获取对应的 set 方法的参数类型，然后将 cellValue 转换成对应的类型，再调用对应的 set 方法设置属性值
                     String methodName = column2Method.get(effectiveIndex);
-                    // 获取对应的 set 方法
+                    // 获取对应的 get 方法
                     Method method = clazz.getMethod("get" + methodName);
                     // 获取第一个参数的数据类型
                     String returnType = method.getReturnType().getSimpleName();
