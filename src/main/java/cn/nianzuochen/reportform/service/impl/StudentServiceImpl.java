@@ -31,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
     public ResponseEntity<byte[]> exportStudentById(Integer id) {
         Student student = studentMapper.selectByPrimaryKey(id);
         Export2Excel export2Excel = new Export2Excel("Student");
-        HSSFSheet sheet = export2Excel.createExcel("student");
+        HSSFSheet sheet = export2Excel.createSheet("student");
         List<Student> list = new ArrayList<>();
         list.add(student);
         return export2Excel.addInfo(sheet, list);

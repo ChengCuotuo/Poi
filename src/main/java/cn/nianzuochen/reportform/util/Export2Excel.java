@@ -37,7 +37,7 @@ public class Export2Excel {
      * @param sheetName excel 文件的第一个 sheet 名称
      * @return
      */
-    public HSSFSheet createExcel (String sheetName) {
+    public HSSFSheet createSheet (String sheetName) {
         return workbook.createSheet(sheetName);
     }
 
